@@ -2,8 +2,6 @@ import socket
 import numpy as np
 import cv2
 
-from common import Sketcher
-
 h, w = 1500, 750
 x, y = int(w/2), int(h/2)
 mark = np.zeros((h, w, 3), np.uint8)
@@ -33,7 +31,13 @@ while True:
     except:
         continue
     if not data:
-        break
+        server_socket.listen()
+        conn, address = server_socket.accept()  
+        print("Connection from: " + str(address))
+        conn.settimeout(0.3)
+        mark *= 0
+        cv2.imshow('drawing', mark)
+        continue
     dsplit =  data.split(' ')
     if len(dsplit) > 7:
         prevx, prevy = x, y
